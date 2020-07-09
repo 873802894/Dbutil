@@ -4,6 +4,7 @@ import bean.StudentBean;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import sun.plugin2.main.server.ResultHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -64,6 +65,21 @@ public class Crud {
         }
          return list;
     }
+/**
+ *  create by : gy
+ *  2020/7/9
+ *  des:采用泛型，不需要修改方法中javabean类，只需要传入一个javabean通过泛型转化成想要的实体
+**/
+    public  <T> T findbyid(String sql,int id,T t){
+         try{
+             t = (T) qr.query(sql,new BeanHandler<Object>(t.getClass()) ,id);
+             return t;
+         }catch (SQLException e){
+             e.printStackTrace();
+             return null;
+         }
+    }
+
 
 /**
  *  create by : gy
@@ -76,6 +92,22 @@ public class Crud {
             list=  qr.query(sql, new BeanListHandler<>(StudentBean.class));
         }catch (SQLException throwables){
             throwables.printStackTrace();
+        }
+        return list;
+    }
+
+
+/**
+*  create by : gy
+*  2020/7/9
+*  des:采用泛型，不需要修改方法中javabean类，只需要传入一个javabean通过泛型转化成想要的实体
+**/
+    public <T> List<T> findall(String sql,T t){
+        List<T> list = new ArrayList<>();
+        try{
+            list = (List<T>)qr.query(sql,new BeanListHandler<Object>(t.getClass()));
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return list;
     }
